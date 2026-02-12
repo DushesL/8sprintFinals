@@ -99,7 +99,29 @@ func (s ParcelService) Delete(number int) error {
 func main() {
 	// настройте подключение к БД
 
-	store := // создайте объект ParcelStore функцией NewParcelStore
+	db, err := sql.Open("sqlite", "tracker.db")
+	if err != nil {
+		fmt.Println("Error opening database:", err)
+		return
+	}
+	defer db.Close()
+
+	// создаём таблицу, если её нет
+	_, err = db.Exec(`
+		CREATE TABLE IF NOT EXISTS parcel (
+			number INTEGER PRIMARY KEY AUTOINCREMENT,
+			client INTEGER NOT NULL,
+			status TEXT NOT NULL,
+			address TEXT NOT NULL,
+		created_at TEXT NOT NULL
+	)
+	`)
+	if err != nil {
+		fmt.Println("Error creating table:", err)
+		return
+	}
+
+	store := NewParcelStore(db)
 	service := NewParcelService(store)
 
 	// регистрация посылки
