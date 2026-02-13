@@ -6,6 +6,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -57,7 +58,7 @@ func TestAddGetDelete(t *testing.T) {
 	// get
 	got, err := store.Get(id)
 	require.NoError(t, err)
-	require.Equal(t, parcel, got)
+	assert.Equal(t, parcel, got)
 
 	// delete
 	err = store.Delete(id)
@@ -100,7 +101,7 @@ func TestSetAddress(t *testing.T) {
 	// check
 	got, err := store.Get(id)
 	require.NoError(t, err)
-	require.Equal(t, newAddress, got.Address)
+	assert.Equal(t, newAddress, got.Address)
 }
 
 // TestSetStatus проверяет обновление статуса
@@ -135,7 +136,7 @@ func TestSetStatus(t *testing.T) {
 	// check
 	got, err := store.Get(id)
 	require.NoError(t, err)
-	require.Equal(t, ParcelStatusSent, got.Status)
+	assert.Equal(t, ParcelStatusSent, got.Status)
 }
 
 // TestGetByClient проверяет получение посылок по идентификатору клиента
@@ -176,15 +177,15 @@ func TestGetByClient(t *testing.T) {
 	// get by client
 	storedParcels, err := store.GetByClient(client)
 	require.NoError(t, err)
-	require.Len(t, storedParcels, len(parcels))
+	assert.Len(t, storedParcels, len(parcels))
 
 	// check
 	for _, got := range storedParcels {
 		expected, ok := parcelMap[got.Number]
-		require.True(t, ok)
-		require.Equal(t, expected.Client, got.Client)
-		require.Equal(t, expected.Status, got.Status)
-		require.Equal(t, expected.Address, got.Address)
-		require.Equal(t, expected.CreatedAt, got.CreatedAt)
+		assert.True(t, ok)
+		assert.Equal(t, expected.Client, got.Client)
+		assert.Equal(t, expected.Status, got.Status)
+		assert.Equal(t, expected.Address, got.Address)
+		assert.Equal(t, expected.CreatedAt, got.CreatedAt)
 	}
 }
